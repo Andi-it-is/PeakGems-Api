@@ -49,10 +49,10 @@ import { AppDataSource } from "./AppDataSource";
 const PORT: string = process.env.PORT || "3000";
 app.listen(PORT, async () => {
 
-    console.log('Timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
+  console.log('Timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
   
-    await connectToDb();
-    console.log(`Backend started. Listening on port: ${PORT}`);
+  await connectToDb();
+  console.log(`Backend started. Listening on port: ${PORT}`);
 });
 
 

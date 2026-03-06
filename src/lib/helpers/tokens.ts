@@ -9,7 +9,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 function toUuidWithId(uuid: string, id: number): string {
-    return uuid + "?" + id;
+    return uuid
 }
 
 export async function generate(

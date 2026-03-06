@@ -14,12 +14,12 @@ export const AppDataSource = new DataSource({
     migrationsRun: true,
     // Use glob patterns to find files
     entities: [
-        __dirname + "/entity/**/*.{js,ts}"
+        __dirname + "/entity/*.{js,ts}"
     ],
     migrations: [
-        __dirname + "/migrations/**/*.{js,ts}"
+        __dirname + "/migration/*.{js,ts}"
     ],
     subscribers: [
-        __dirname + "/subscribers/**/*.{js,ts}"
+        __dirname + "/subscribers/*.{js,ts}"
     ],
 })
