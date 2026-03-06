@@ -45,7 +45,7 @@ import versionRouter from "./api/versionRouter";
 app.use(versionRouter);
 
 
-import { AppDataSource } from "./AooDataSource";
+import { AppDataSource } from "./AppDataSource";
 const PORT: string = process.env.PORT || "3000";
 app.listen(PORT, async () => {
 
