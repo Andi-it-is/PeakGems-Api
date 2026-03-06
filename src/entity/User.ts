@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm"
 import { RefreshToken } from "./RefreshToken"
 
 @Entity()
@@ -33,6 +33,12 @@ export class User {
         nullable: false
     })
         role: string
+    
+    @CreateDateColumn()
+        createdAt: Date;
+
+    @UpdateDateColumn()
+        updatedAt: Date;
     
     @OneToMany(() => RefreshToken, refreshToken => refreshToken.user)
         refreshTokens: RefreshToken[];
