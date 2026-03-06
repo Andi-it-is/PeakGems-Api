@@ -34,7 +34,7 @@ export const login: RequestHandler  = async (req: Request, res: Response, next) 
     if (user.disabled) {
       throw APIError.errorIsDeactivated();
     }
-    
+
     const passwordMatch = await compare(body.password, user.passwordHash);
     if (!passwordMatch) {
         user.failedLoginTries += 1;
@@ -72,8 +72,6 @@ export const login: RequestHandler  = async (req: Request, res: Response, next) 
     }
 
   } catch (error) {
-
-    console.log("%%%%%%%%%% ", error)
 
     if (error.isJoi) {
       return res.status(400).json({

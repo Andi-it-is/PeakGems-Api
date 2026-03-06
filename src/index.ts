@@ -76,6 +76,7 @@ const connectToDb = async (): Promise<any> => {
     }
     console.log("Connection to DB successfull - runnning migration");
     await AppDataSource.runMigrations();
+    console.log("Runnning migration was successfull. Enjoy the Applications Backend");
 
     return;
 };
