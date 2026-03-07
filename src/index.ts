@@ -30,14 +30,14 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-// app.use(cors());  
 
-let corsOptions = {
-  origin: process.env.CORS_ORIGIN,
-  optionSuccessStatus: 200,
-  methods: ['GET', 'PUT', 'POST', 'DELETE']
-}
-app.use(cors(corsOptions))
+
+app.use(cors({
+    origin: 'http://localhost:9000',    //TODO make it environment variable
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true, // Needed if you are using cookies/sessions
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json())
 
 // routes

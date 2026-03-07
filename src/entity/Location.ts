@@ -13,6 +13,11 @@ export class Location {
     @Column({
         nullable: false,
     })
+        name: string
+        
+    @Column({
+        nullable: false,
+    })
         address: string
     
     @Column({
@@ -32,10 +37,10 @@ export class Location {
         updatedAt: Date
     
     @OneToMany(() => Gathering, gathering => gathering.location)
-        gathering: Gathering
+        gathering: Gathering[]
 
     @OneToMany(() => Review, review => review.location)
-        review: Review
+        review: Review[]
 
 
 }

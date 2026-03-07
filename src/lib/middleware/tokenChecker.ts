@@ -5,6 +5,7 @@ import { UserRequestHandler } from "../classes/UserRequestHandler";
 import { User } from "../../entity/User";
 
 export const userTokenChecker: UserRequestHandler = async (req, res, next) => {
+
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith("Bearer ")) {
