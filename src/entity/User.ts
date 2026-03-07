@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm"
 import { RefreshToken } from "./RefreshToken"
+import { UserRoleEnum } from "../lib/enums/UserRoleEnum"
 
 @Entity()
 export class User {
@@ -32,7 +33,7 @@ export class User {
     @Column({
         nullable: false
     })
-        role: string
+        role: UserRoleEnum
     
     @CreateDateColumn()
         createdAt: Date;

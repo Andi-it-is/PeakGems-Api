@@ -1,7 +1,7 @@
 import { User } from "../../../entity/User";
-import { AdminOnlyRequestHandler } from "../../../lib/classes/AdminRequest";
+import { UserRequestHandler } from "../../../lib/classes/UserRequestHandler";
 
-export const getAllUsers: AdminOnlyRequestHandler = async (req, res, next) => {
+export const getAllUsers: UserRequestHandler = async (req, res, next) => {
   
   try {
     console.log("admiiiiiiiin")
