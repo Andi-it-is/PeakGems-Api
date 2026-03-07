@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm"
 import { RefreshToken } from "./RefreshToken"
 import { UserRoleEnum } from "../lib/enums/UserRoleEnum"
+import { Review } from "./Review"
 
 @Entity()
 export class User {
@@ -43,6 +44,9 @@ export class User {
     
     @OneToMany(() => RefreshToken, refreshToken => refreshToken.user)
         refreshTokens: RefreshToken[];
+    
+    @OneToMany(() => Review, review => review.user)
+        reviews: Review[]
 
 
 }
