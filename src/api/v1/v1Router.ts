@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-// import token checker
+import { userTokenChecker } from "../../lib/middleware/tokenChecker";
 import authRouter from "./auth/router";
 import userRouter from "./user/router";
 
@@ -10,7 +10,7 @@ router.use("/auth", authRouter)
 
 // router use token checker
 
-router.use("/user", userRouter)
+router.use("/user", userTokenChecker, userRouter)
 
 // saved routes
 
