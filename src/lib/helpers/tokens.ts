@@ -81,7 +81,7 @@ export async function generateAccessToken(id: number): Promise<string> {
         payload,
         process.env.JWT_ACCESSTOKEN_SECRET,
         {
-            expiresIn: "60m"  //TODO Adjust this for wished JWT max expire date. 1 hour is standard
+            expiresIn: "60000m"  //TODO Adjust this for wished JWT max expire date. 1 hour is standard
         }
     );
 

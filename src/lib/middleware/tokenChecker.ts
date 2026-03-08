@@ -1,10 +1,10 @@
 import { APIError } from "../classes/APIError";
 import * as jwt from "jsonwebtoken";
 import { AppDataSource } from "../../AppDataSource";
-import { UserRequestHandler } from "../classes/UserRequestHandler";
+import { UserRequest, UserRequestHandler } from "../classes/UserRequestHandler";
 import { User } from "../../entity/User";
 
-export const userTokenChecker: UserRequestHandler = async (req, res, next) => {
+export const userTokenChecker: UserRequestHandler = async (req: UserRequest, res, next) => {
 
   try {
     const authHeader = req.headers.authorization;
@@ -13,7 +13,7 @@ export const userTokenChecker: UserRequestHandler = async (req, res, next) => {
     }
 
     const token = authHeader.split(" ")[1];
-    
+
     // 1. Verify Token
     const decoded = jwt.verify(token, process.env.JWT_ACCESSTOKEN_SECRET!) as { userId: number };
 

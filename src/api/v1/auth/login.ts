@@ -63,12 +63,12 @@ export const login: RequestHandler  = async (req: Request, res: Response, next) 
         // If a valid refresh token exists, we return it.
         // This is useful for the client to keep the session alive.
         return res.status(200).json({ 
-            refreshToken: `${refreshToken.token}?${refreshToken.id}`,
+            // refreshToken: `${refreshToken.token}?${refreshToken.id}`,
             accessToken: await generateAccessToken(user.id)
         });
     } else {
         const tokens = await generate(user.id);
-        return res.status(200).json(tokens)
+        return res.status(200).json(tokens.accessToken)
     }
 
   } catch (error) {

@@ -11,8 +11,8 @@ const router = Router()
  * * unatuhorized routes. These are publically available.
  */
 router.use("/auth", authRouter)
-router.use("/location", locationRouter)
-router.use("/review", reviewRouter)
+
+// router.use("/review", reviewRouter)
 
 /**
  * * every router after this will have the middleware applied.
@@ -23,7 +23,9 @@ router.use("/review", reviewRouter)
 /**
  * * protected routes.
 */
-// router.use("/review", userTokenChecker, reviewRouter)
+// router.use("/location", userTokenChecker, locationRouter)
+router.use("/location", userTokenChecker, locationRouter)
+router.use("/review", userTokenChecker, reviewRouter)
 // router.use("/user", userTokenChecker, userRouter)
 
 // saved routes
