@@ -13,7 +13,7 @@ export const listAllLocationsOverview: RequestHandler  = async (req: Request, re
     const locations = await AppDataSource
       .getRepository(Location)
       .find({
-        relations: ["review"]
+        relations: ["reviews"]
     });
     
     let locationsWithAvgRating = structuredClone(locations);
@@ -25,8 +25,7 @@ export const listAllLocationsOverview: RequestHandler  = async (req: Request, re
     
     // determine avg rating of each location and add avg value and total amount of ratings to the response
     locationsWithAvgRating.forEach((loc: LocationWithRating) => {
-      const reviews = loc.review
-      console.log(reviews)
+      const reviews = loc.reviews
       let avg = 0
       reviews.forEach((rev: Review) => {
         avg += rev.rating
@@ -37,7 +36,7 @@ export const listAllLocationsOverview: RequestHandler  = async (req: Request, re
       }
       loc.averageRating = avg
       loc.totalRatings = reviews.length
-      delete loc.review
+      delete loc.reviews
     })
 
     return res.status(200).json({
@@ -46,6 +45,8 @@ export const listAllLocationsOverview: RequestHandler  = async (req: Request, re
     })
 
   } catch (error) {
+
+    console.log(error)
 
     if (error.isJoi) {
       return res.status(400).json({

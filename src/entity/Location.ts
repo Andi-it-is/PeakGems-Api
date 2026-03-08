@@ -37,10 +37,10 @@ export class Location {
         updatedAt: Date
     
     @OneToMany(() => Gathering, gathering => gathering.location)
-        gathering: Gathering[]
+        gatherings: Gathering[]
 
     @OneToMany(() => Review, review => review.location)
-        review: Review[]
+        reviews: Review[]
 
 
 }

@@ -24,7 +24,7 @@ export class Gathering {
     @UpdateDateColumn()
         updatedAt: Date
         
-    @ManyToOne(() => Location, location => location.gathering)
+    @ManyToOne(() => Location, location => location.gatherings)
         location: Location
 
 

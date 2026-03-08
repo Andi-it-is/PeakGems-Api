@@ -15,6 +15,12 @@ export class Review {
         rating: number
     
     @Column({
+        type: 'date',
+        nullable: false
+    })
+        visitedDate: Date
+    
+    @Column({
         nullable: true,
     })
         orderedDish: string
@@ -35,7 +41,7 @@ export class Review {
     @ManyToOne(() => User, user => user.reviews)
         user: User
     
-    @ManyToOne(() => Location, location => location.review)
+    @ManyToOne(() => Location, location => location.reviews)
         location: Location
 
 
