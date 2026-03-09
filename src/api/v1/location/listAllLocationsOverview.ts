@@ -46,8 +46,6 @@ export const listAllLocationsOverview: RequestHandler  = async (req: Request, re
 
   } catch (error) {
 
-    console.log(error)
-
     if (error.isJoi) {
       return res.status(400).json({
           status: "Validation Error",

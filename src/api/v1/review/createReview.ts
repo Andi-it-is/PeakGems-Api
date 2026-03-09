@@ -30,10 +30,7 @@ export const createReview: UserRequestHandler = async (req: UserRequest, res: Re
     }
     review.visitedDate = body.date
     review.location = body.locationId
-
-    // TODO deconstruct the authorization header and get user id from it
-    //review.user = req.user.id
-    // review.user = { id: 1 }
+    review.user = req.user
 
     await AppDataSource.manager.save(review)
 

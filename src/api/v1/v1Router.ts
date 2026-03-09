@@ -26,7 +26,7 @@ router.use("/auth", authRouter)
 // router.use("/location", userTokenChecker, locationRouter)
 router.use("/location", userTokenChecker, locationRouter)
 router.use("/review", userTokenChecker, reviewRouter)
-// router.use("/user", userTokenChecker, userRouter)
+router.use("/user", userTokenChecker, userRouter)
 
 // saved routes
 
