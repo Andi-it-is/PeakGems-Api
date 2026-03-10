@@ -7,7 +7,7 @@ import { Review } from "../../../entity/Review";
 
 
 const bodySchema = Joi.object({
-  date: Joi.required(),
+  visitedDate: Joi.required(),
   rating: Joi.number().required(),
   orderedDish: Joi.string(),
   comment: Joi.string().required(),
@@ -28,7 +28,7 @@ export const createReview: UserRequestHandler = async (req: UserRequest, res: Re
     } else {
       review.orderedDish = 'Keine Angabe'
     }
-    review.visitedDate = body.date
+    review.visitedDate = body.visitedDate
     review.location = body.locationId
     review.user = req.user
 
