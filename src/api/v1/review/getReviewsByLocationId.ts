@@ -21,8 +21,37 @@ export const getReviewsByLocationId: RequestHandler  = async (req: Request, res:
         where: {
           id: params.id
         },
-        relations: ["reviews"]
+        relations: {
+          reviews: {
+            user: true // Tells TypeORM to load the user for every review
+          }
+        },
+        select: {
+          // 1. Keep all Location fields
+          id: true,
+          name: true,
+          address: true,
+          status: true,
+          type: true,
+          
+          // 2. Keep all Review fields
+          reviews: {
+            id: true,
+            comment: true,
+            rating: true,
+            visitedDate: true,
+            orderedDish: true,
+            
+            // 3. Restrict User fields to only id and username
+            user: {
+              id: true,
+              username: true
+            }
+          }
+        }
       })
+    
+    console.log(location)
 
     interface LocationWithRating extends Location {
       averageRating: number

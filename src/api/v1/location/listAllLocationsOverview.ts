@@ -13,7 +13,10 @@ export const listAllLocationsOverview: RequestHandler  = async (req: Request, re
     const locations = await AppDataSource
       .getRepository(Location)
       .find({
-        relations: ["reviews"]
+        relations: ["reviews"],
+        order: {
+          id: 'ASC'
+        }
     });
     
     let locationsWithAvgRating = structuredClone(locations);

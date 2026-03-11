@@ -15,7 +15,7 @@ const bodySchema = Joi.object({
   address: Joi.string().required(),
   status: Joi.string().required(),
   type: Joi.string().required()
-})
+}).unknown(true)
 
 export const updateLocation: UserRequestHandler = async (req: UserRequest, res: Response, next) => {
 
@@ -28,7 +28,7 @@ export const updateLocation: UserRequestHandler = async (req: UserRequest, res: 
       .findOne({
         where: {
           id: Number(params.id),
-        }
+        },
       })
     
     if (!location) {
@@ -50,6 +50,7 @@ export const updateLocation: UserRequestHandler = async (req: UserRequest, res: 
     return res.status(200).json({
       success: true,
       message: "Location successfully updated",
+      data: location
     })
 
   } catch (error) {

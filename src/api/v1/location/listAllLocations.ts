@@ -10,7 +10,11 @@ export const listAllLocations: RequestHandler  = async (req: Request, res: Respo
     
     const locations = await AppDataSource
       .getRepository(Location)
-      .find()
+      .find({
+        order: {
+          id: 'ASC'
+        }
+      })
 
     return res.status(200).json({
       success: true,

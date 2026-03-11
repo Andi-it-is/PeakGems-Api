@@ -30,6 +30,9 @@ export const createReview: UserRequestHandler = async (req: UserRequest, res: Re
     }
     review.visitedDate = body.visitedDate
     review.location = body.locationId
+
+    console.log(review)
+    console.log(req.user)
     review.user = req.user
 
     await AppDataSource.manager.save(review)
