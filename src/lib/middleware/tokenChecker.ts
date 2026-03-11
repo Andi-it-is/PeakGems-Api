@@ -7,7 +7,6 @@ import { User } from "../../entity/User";
 export const userTokenChecker: UserRequestHandler = async (req: UserRequest, res, next) => {
 
   try {
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&  IIIIIIII")
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith("Bearer ")) {
       return res.status(401).json({ success: false, message: "No token provided" });
@@ -19,7 +18,6 @@ export const userTokenChecker: UserRequestHandler = async (req: UserRequest, res
     const decoded = jwt.verify(token, process.env.JWT_ACCESSTOKEN_SECRET!) as { id: number };
 
     // 2. Fetch User from DB (include role)
-    console.log("decoded %%%", decoded)
     const user = await AppDataSource
       .getRepository(User)
       .findOne({
@@ -34,7 +32,6 @@ export const userTokenChecker: UserRequestHandler = async (req: UserRequest, res
     }
 
     // 3. Attach to request (Type-casted via your interface)
-    console.log("attaching => ", user)
     req.user = user;
     req.role = user.role;
 
