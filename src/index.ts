@@ -16,7 +16,8 @@ const loggingFormat = ":date[iso] - :method - :url - :status - :response-time ms
 app.use(morgan(loggingFormat, {
     skip: (req) => {
         return req.method === 'OPTIONS' || process.env.NODE_ENV == "test";
-    }}));
+    }
+}));
 
 
 // // body parser
@@ -26,14 +27,14 @@ app.use(morgan(loggingFormat, {
 // TODO: cors
 const cors = require('cors')
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 });
 
 
 app.use(cors({
-    origin: 'http://localhost:9000',    //TODO make it environment variable
+    origin: process.env.CORS_ORIGIN,    //TODO make it environment variable
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Needed if you are using cookies/sessions
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -49,10 +50,10 @@ import { AppDataSource } from "./AppDataSource";
 const PORT: string = process.env.PORT || "3000";
 app.listen(PORT, async () => {
 
-  console.log('Timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
-  
-  await connectToDb();
-  console.log(`Backend started. Listening on port: ${PORT}`);
+    console.log('Timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+    await connectToDb();
+    console.log(`Backend started. Listening on port: ${PORT}`);
 });
 
 
@@ -62,6 +63,10 @@ const connectToDb = async (): Promise<any> => {
     for (let counter = 0; counter < 5; counter++) {
 
         try {
+            console.log(process.env.DB_USERNAME)
+            console.log(process.env.DB_PASSWORD)
+            console.log(process.env.DB_DATABASE)
+
             await AppDataSource.initialize();
             break;
         } catch (error) {

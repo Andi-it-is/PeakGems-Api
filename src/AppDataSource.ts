@@ -2,7 +2,8 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { User } from "./entity/User"
 import * as dotenv from "dotenv";
-
+// Load .env file from the root directory
+dotenv.config();
 
 export const AppDataSource = new DataSource({
     type: process.env.DB_TYPE as any,
