@@ -36,7 +36,7 @@ export const userTokenChecker: UserRequestHandler = async (req: UserRequest, res
     req.role = user.role;
 
     next(); // Proceed to the route handler
-    
+
   } catch (error) {
 
     return res.status(401).json({

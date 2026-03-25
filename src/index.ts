@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
 
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,    //TODO make it environment variable
+    origin: "*",    //TODO make it environment variable
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Needed if you are using cookies/sessions
     allowedHeaders: ['Content-Type', 'Authorization']

@@ -9,12 +9,12 @@ const paramSchema = Joi.object({
   id: Joi.string().required()
 })
 
-export const getReviewsByLocationId: RequestHandler  = async (req: Request, res: Response, next) => {
+export const getReviewsByLocationId: RequestHandler = async (req: Request, res: Response, next) => {
 
   try {
 
     const params = await paramSchema.validateAsync(req.params)
-    
+
     const location = await AppDataSource
       .getRepository(Location)
       .findOne({
@@ -33,7 +33,7 @@ export const getReviewsByLocationId: RequestHandler  = async (req: Request, res:
           address: true,
           status: true,
           type: true,
-          
+
           // 2. Keep all Review fields
           reviews: {
             id: true,
@@ -41,7 +41,7 @@ export const getReviewsByLocationId: RequestHandler  = async (req: Request, res:
             rating: true,
             visitedDate: true,
             orderedDish: true,
-            
+
             // 3. Restrict User fields to only id and username
             user: {
               id: true,
@@ -50,8 +50,6 @@ export const getReviewsByLocationId: RequestHandler  = async (req: Request, res:
           }
         }
       })
-    
-    console.log(location)
 
     interface LocationWithRating extends Location {
       averageRating: number
@@ -76,7 +74,7 @@ export const getReviewsByLocationId: RequestHandler  = async (req: Request, res:
       averageRating: avg,
       totalRatings: reviews.length
     };
-      
+
     return res.status(200).json({
       success: true,
       data: locationExpanded,
@@ -86,8 +84,8 @@ export const getReviewsByLocationId: RequestHandler  = async (req: Request, res:
 
     if (error.isJoi) {
       return res.status(400).json({
-          status: "Validation Error",
-          errors: error.details.map((detail: any) => detail.message)
+        status: "Validation Error",
+        errors: error.details.map((detail: any) => detail.message)
       });
     } else {
 

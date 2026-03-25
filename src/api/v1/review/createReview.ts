@@ -18,7 +18,7 @@ export const createReview: UserRequestHandler = async (req: UserRequest, res: Re
 
   try {
     const body = await bodySchema.validateAsync(req.body)
-    
+
     const review = new Review()
     review.rating = body.rating
     review.comment = body.comment
@@ -31,8 +31,6 @@ export const createReview: UserRequestHandler = async (req: UserRequest, res: Re
     review.visitedDate = body.visitedDate
     review.location = body.locationId
 
-    console.log(review)
-    console.log(req.user)
     review.user = req.user
 
     await AppDataSource.manager.save(review)
@@ -46,8 +44,8 @@ export const createReview: UserRequestHandler = async (req: UserRequest, res: Re
 
     if (error.isJoi) {
       return res.status(400).json({
-          status: "Validation Error",
-          errors: error.details.map((detail: any) => detail.message)
+        status: "Validation Error",
+        errors: error.details.map((detail: any) => detail.message)
       });
     } else {
 

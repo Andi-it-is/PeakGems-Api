@@ -4,7 +4,7 @@ import { Location } from "./Location"
 
 @Entity()
 export class Review {
-    
+
     @PrimaryGeneratedColumn()
     id: number
 
@@ -12,37 +12,37 @@ export class Review {
         type: 'float',
         nullable: false,
     })
-        rating: number
-    
+    rating: number
+
     @Column({
-        type: 'date',
-        nullable: false
+        nullable: false,
+        default: "01.01.1970"
     })
-        visitedDate: Date
-    
+    visitedDate: string
+
     @Column({
         nullable: true,
     })
-        orderedDish: string
+    orderedDish: string
 
     @Column({
         nullable: false,
         type: 'text'
     })
-        comment: string
-    
+    comment: string
+
     @CreateDateColumn()
-        createdAt: Date
+    createdAt: Date
 
     @UpdateDateColumn()
-        updatedAt: Date
-    
+    updatedAt: Date
+
 
     @ManyToOne(() => User, user => user.reviews)
-        user: User
-    
+    user: User
+
     @ManyToOne(() => Location, location => location.reviews)
-        location: Location
+    location: Location
 
 
 

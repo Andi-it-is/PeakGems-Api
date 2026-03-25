@@ -15,7 +15,8 @@ const bodySchema = Joi.object({
   rating: Joi.number().required(),
   orderedDish: Joi.string(),
   comment: Joi.string().required(),
-  locationId: Joi.number().required()
+  id: Joi.optional(),
+  user: Joi.optional()
 })
 
 export const updateReview: UserRequestHandler = async (req: UserRequest, res: Response, next) => {
@@ -24,22 +25,23 @@ export const updateReview: UserRequestHandler = async (req: UserRequest, res: Re
     const body = await bodySchema.validateAsync(req.body)
     const params = await paramSchema.validateAsync(req.params)
 
+    console.log("uuuuuu")
     const review = await AppDataSource
       .getRepository(Review)
       .findOne({
         where: {
           id: Number(params.id),
-          user: req.user || req.role === UserRoleEnum.ADMIN
         }
       })
-    
+    console.log("revvvvvv", review, "und neuer ocntent ", body)
+
     if (!review) {
       return res.status(404).json({
         success: false,
         message: "No Review found.",
       })
     }
-    
+
     review.visitedDate = body.visitedDate
     review.rating = body.rating
     if (body.orderedDish) {
@@ -47,7 +49,7 @@ export const updateReview: UserRequestHandler = async (req: UserRequest, res: Re
     } else {
       review.orderedDish = 'Keine Angabe'
     }
-    review.comment = review.comment
+    review.comment = body.comment
 
     await AppDataSource.manager.save(review)
 
@@ -60,13 +62,13 @@ export const updateReview: UserRequestHandler = async (req: UserRequest, res: Re
 
     if (error.isJoi) {
       return res.status(400).json({
-          status: "Validation Error",
-          errors: error.details.map((detail: any) => detail.message)
+        status: "Validation Error",
+        errors: error.details.map((detail: any) => detail.message)
       });
     } else {
 
       return res.status(500).json({
-        message: "Internal server error",
+        message: "Internal server error"
       });
     }
   }
