@@ -6,6 +6,10 @@ import { authorizeRoles } from '../../../lib/middleware/authorizeRoles';
 import { UserRoleEnum } from '../../../lib/enums/UserRoleEnum';
 import { updateLocation } from './updateLocation';
 import { deleteLocation } from './deleteLocation';
+import { uploadLocationImages } from './uploadLocationImages';
+import { listLocationImages } from './listLocationImages';
+import { deleteLocationImage } from './deleteLocationImage';
+import { upload } from '../../../lib/upload';
 
 const locationRouter = Router();
 
@@ -15,5 +19,15 @@ locationRouter.get('/overview', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.
 
 locationRouter.put('/:id', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), updateLocation)
 locationRouter.delete('/:id', authorizeRoles([UserRoleEnum.ADMIN]), deleteLocation)
+
+
+// images related
+locationRouter.get("/:id/images", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listLocationImages);
+locationRouter.post(
+  "/:id/images",
+  authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]),
+  upload.array("images", 10), // <- diese Zeile muss vor dem Controller stehen
+  uploadLocationImages
+); locationRouter.delete("/images/:imageId", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), deleteLocationImage);
 
 export default locationRouter;

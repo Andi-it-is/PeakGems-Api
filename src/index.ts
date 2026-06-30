@@ -45,6 +45,18 @@ app.use(express.json())
 import versionRouter from "./api/versionRouter";
 app.use(versionRouter);
 
+import path from "path";
+
+app.use(helmet());
+
+app.use(
+    "/uploads",
+    (req, res, next) => {
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+        next();
+    },
+    express.static(path.join(__dirname, "../uploads")),
+);
 
 import { AppDataSource } from "./AppDataSource";
 const PORT: string = process.env.PORT || "3000";
@@ -63,9 +75,6 @@ const connectToDb = async (): Promise<any> => {
     for (let counter = 0; counter < 5; counter++) {
 
         try {
-            console.log(process.env.DB_USERNAME)
-            console.log(process.env.DB_PASSWORD)
-            console.log(process.env.DB_DATABASE)
 
             await AppDataSource.initialize();
             break;
