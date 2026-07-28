@@ -25,7 +25,6 @@ export const updateReview: UserRequestHandler = async (req: UserRequest, res: Re
     const body = await bodySchema.validateAsync(req.body)
     const params = await paramSchema.validateAsync(req.params)
 
-    console.log("uuuuuu")
     const review = await AppDataSource
       .getRepository(Review)
       .findOne({
@@ -33,7 +32,6 @@ export const updateReview: UserRequestHandler = async (req: UserRequest, res: Re
           id: Number(params.id),
         }
       })
-    console.log("revvvvvv", review, "und neuer ocntent ", body)
 
     if (!review) {
       return res.status(404).json({
