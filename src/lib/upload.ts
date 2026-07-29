@@ -33,3 +33,34 @@ export const upload = multer({
     }
   },
 });
+
+const avatarUploadDir = path.join(__dirname, "../../uploads/avatars"); // TODO: Pfad an Projektstruktur anpassen
+
+if (!fs.existsSync(avatarUploadDir)) {
+  fs.mkdirSync(avatarUploadDir, { recursive: true });
+}
+
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, avatarUploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+export const avatarUpload = multer({
+  storage: avatarStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+    const allowed = /jpeg|jpg|png|webp/;
+    const isValid = allowed.test(path.extname(file.originalname).toLowerCase());
+
+    if (isValid) {
+      cb(null, true);
+    } else {
+      cb(new Error("Nur Bilddateien erlaubt (jpeg, jpg, png, webp)"));
+    }
+  },
+});

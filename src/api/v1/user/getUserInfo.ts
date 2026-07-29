@@ -3,7 +3,7 @@ import { User } from "../../../entity/User";
 import { UserRequest, UserRequestHandler } from "../../../lib/classes/UserRequestHandler";
 
 export const getUserInfo: UserRequestHandler = async (req: UserRequest, res, next) => {
-  
+
   try {
 
     const user = await AppDataSource
@@ -13,12 +13,14 @@ export const getUserInfo: UserRequestHandler = async (req: UserRequest, res, nex
           id: req.user.id
         }
       })
-    
+
     return res.status(200).json({
       success: true,
       username: user.username,
       role: user.role,
-      userId: user.id
+      userId: user.id,
+      avatar: user.avatar,
+      mustSetNewPassword: user.mustSetNewPassword
     })
 
   } catch (error) {

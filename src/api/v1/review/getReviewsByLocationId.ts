@@ -42,10 +42,11 @@ export const getReviewsByLocationId: RequestHandler = async (req: Request, res: 
             visitedDate: true,
             orderedDish: true,
 
-            // 3. Restrict User fields to only id and username
+            // 3. Restrict User fields to only id username and avatar
             user: {
               id: true,
-              username: true
+              username: true,
+              avatar: true
             }
           }
         }

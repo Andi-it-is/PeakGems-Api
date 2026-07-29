@@ -20,7 +20,12 @@ export class User {
         select: false
     })
         passwordHash: string
-    
+
+    @Column({
+        default: false
+    })
+        mustSetNewPassword: boolean
+
     @Column({
         default: true
     })
@@ -35,6 +40,11 @@ export class User {
         nullable: false
     })
         role: UserRoleEnum
+
+    @Column({
+        nullable: true
+    })
+        avatar: string
     
     @CreateDateColumn()
         createdAt: Date;

@@ -1,16 +1,35 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 export class Migration1782818621985 implements MigrationInterface {
     name = 'Migration1782818621985'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "location_image" ("id" SERIAL NOT NULL, "filename" character varying NOT NULL, "url" character varying NOT NULL, "altText" character varying, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "locationId" integer NOT NULL, CONSTRAINT "PK_dfa981be0cd5c3c2f8c37915564" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`ALTER TABLE "location_image" ADD CONSTRAINT "FK_b16e8454e89e24bd0aacc26b6d7" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.createTable(new Table({
+            name: "location_image",
+            columns: [
+                { name: "id", type: "int", isPrimary: true, isGenerated: true, generationStrategy: "increment" },
+                { name: "filename", type: "varchar", isNullable: false },
+                { name: "url", type: "varchar", isNullable: false },
+                { name: "altText", type: "varchar", isNullable: true },
+                { name: "createdAt", type: "timestamp", isNullable: false, default: "CURRENT_TIMESTAMP" },
+                { name: "locationId", type: "int", isNullable: false },
+            ],
+        }), true);
+
+        await queryRunner.createForeignKey("location_image", new TableForeignKey({
+            columnNames: ["locationId"],
+            referencedTableName: "location",
+            referencedColumnNames: ["id"],
+            onDelete: "CASCADE",
+            onUpdate: "NO ACTION",
+        }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "location_image" DROP CONSTRAINT "FK_b16e8454e89e24bd0aacc26b6d7"`);
-        await queryRunner.query(`DROP TABLE "location_image"`);
+        const table = await queryRunner.getTable("location_image");
+        const foreignKey = table.foreignKeys.find(fk => fk.columnNames.indexOf("locationId") !== -1);
+        await queryRunner.dropForeignKey("location_image", foreignKey);
+        await queryRunner.dropTable("location_image");
     }
 
 }

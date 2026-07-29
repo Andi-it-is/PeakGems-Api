@@ -10,14 +10,16 @@ const paramSchema = Joi.object({
   id: Joi.required(),
 });
 
+const bodySchema = Joi.object({
+  altText: Joi.string().min(1).max(50).required(),
+});
+
 export const uploadLocationImages: UserRequestHandler = async (req: UserRequest, res: Response) => {
   try {
     const params = await paramSchema.validateAsync(req.params);
+    const body = await bodySchema.validateAsync(req.body);
 
     const files = (req as any).files as Express.Multer.File[];
-
-    console.log(params)
-    console.log(files)
 
     if (!files || files.length === 0) {
       return res.status(400).json({
@@ -43,6 +45,7 @@ export const uploadLocationImages: UserRequestHandler = async (req: UserRequest,
       imageRepo.create({
         filename: file.filename,
         url: `/uploads/locations/${file.filename}`, // TODO: an euer Storage-Setup anpassen
+        altText: body.altText,
         locationId: location.id,
       }),
     );

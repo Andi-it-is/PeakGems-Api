@@ -9,7 +9,7 @@ const paramSchema = Joi.object({
   id: Joi.string().required()
 })
 
-export const getAllReviewsFromUserId: RequestHandler  = async (req: Request, res: Response, next) => {
+export const getAllReviewsFromUserId: RequestHandler = async (req: Request, res: Response, next) => {
 
   try {
 
@@ -22,9 +22,13 @@ export const getAllReviewsFromUserId: RequestHandler  = async (req: Request, res
           user: {
             id: Number(req.params.id)
           }
+        },
+        relations: ['location'],
+        order: {
+          id: 'DESC'
         }
       })
-      
+
     return res.status(200).json({
       success: true,
       data: reviews,
@@ -34,8 +38,8 @@ export const getAllReviewsFromUserId: RequestHandler  = async (req: Request, res
 
     if (error.isJoi) {
       return res.status(400).json({
-          status: "Validation Error",
-          errors: error.details.map((detail: any) => detail.message)
+        status: "Validation Error",
+        errors: error.details.map((detail: any) => detail.message)
       });
     } else {
 

@@ -1,18 +1,53 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 export class addUserAndTokens1772876033067 implements MigrationInterface {
     name = 'addUserAndTokens1772876033067'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "refresh_token" ("id" SERIAL NOT NULL, "token" uuid NOT NULL DEFAULT uuid_generate_v4(), "validUntil" TIMESTAMP NOT NULL, "lastUsed" TIMESTAMP NOT NULL DEFAULT now(), "isActive" boolean NOT NULL DEFAULT true, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userId" integer, CONSTRAINT "UQ_c31d0a2f38e6e99110df62ab0af" UNIQUE ("token"), CONSTRAINT "PK_b575dd3c21fb0831013c909e7fe" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "username" character varying NOT NULL, "passwordHash" character varying NOT NULL, "disabled" boolean NOT NULL DEFAULT true, "failedLoginTries" integer NOT NULL DEFAULT '0', "role" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_78a916df40e02a9deb1c4b75edb" UNIQUE ("username"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`ALTER TABLE "refresh_token" ADD CONSTRAINT "FK_8e913e288156c133999341156ad" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.createTable(new Table({
+            name: "user",
+            columns: [
+                { name: "id", type: "int", isPrimary: true, isGenerated: true, generationStrategy: "increment" },
+                { name: "username", type: "varchar", isNullable: false, isUnique: true },
+                { name: "passwordHash", type: "varchar", isNullable: false },
+                { name: "disabled", type: "boolean", isNullable: false, default: true },
+                { name: "failedLoginTries", type: "int", isNullable: false, default: 0 },
+                { name: "role", type: "varchar", isNullable: false },
+                { name: "createdAt", type: "timestamp", isNullable: false, default: "CURRENT_TIMESTAMP" },
+                { name: "updatedAt", type: "timestamp", isNullable: false, default: "CURRENT_TIMESTAMP" },
+            ],
+        }), true);
+
+        await queryRunner.createTable(new Table({
+            name: "refresh_token",
+            columns: [
+                { name: "id", type: "int", isPrimary: true, isGenerated: true, generationStrategy: "increment" },
+                // Wird per crypto.randomUUID() im Code gesetzt (kein DB-Default, damit Postgres/MySQL gleichermaßen funktionieren)
+                { name: "token", type: "varchar", length: "36", isUnique: true },
+                { name: "validUntil", type: "timestamp", isNullable: false },
+                { name: "lastUsed", type: "timestamp", isNullable: false, default: "CURRENT_TIMESTAMP" },
+                { name: "isActive", type: "boolean", isNullable: false, default: true },
+                { name: "createdAt", type: "timestamp", isNullable: false, default: "CURRENT_TIMESTAMP" },
+                { name: "updatedAt", type: "timestamp", isNullable: false, default: "CURRENT_TIMESTAMP" },
+                { name: "userId", type: "int", isNullable: true },
+            ],
+        }), true);
+
+        await queryRunner.createForeignKey("refresh_token", new TableForeignKey({
+            columnNames: ["userId"],
+            referencedTableName: "user",
+            referencedColumnNames: ["id"],
+            onDelete: "CASCADE",
+            onUpdate: "NO ACTION",
+        }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "refresh_token" DROP CONSTRAINT "FK_8e913e288156c133999341156ad"`);
-        await queryRunner.query(`DROP TABLE "user"`);
-        await queryRunner.query(`DROP TABLE "refresh_token"`);
+        const refreshTokenTable = await queryRunner.getTable("refresh_token");
+        const foreignKey = refreshTokenTable.foreignKeys.find(fk => fk.columnNames.indexOf("userId") !== -1);
+        await queryRunner.dropForeignKey("refresh_token", foreignKey);
+        await queryRunner.dropTable("refresh_token");
+        await queryRunner.dropTable("user");
     }
 
 }

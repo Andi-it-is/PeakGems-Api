@@ -6,6 +6,7 @@ import { APIError } from "../classes/APIError";
 import dayjs from "dayjs";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from 'dotenv';
+import { randomUUID } from "crypto";
 dotenv.config();
 
 function toUuidWithId(uuid: string, id: number): string {
@@ -50,6 +51,7 @@ export async function _generateRefreshToken(id: number): Promise<string> {
 
     const rT = new RefreshToken();
     rT.user = authenticable;
+    rT.token = randomUUID();
     rT.validUntil = dayjs().add(3, "months").toDate();
 
     await AppDataSource.manager.save(rT);

@@ -8,6 +8,7 @@ import { updateLocation } from './updateLocation';
 import { deleteLocation } from './deleteLocation';
 import { uploadLocationImages } from './uploadLocationImages';
 import { listLocationImages } from './listLocationImages';
+import { listAllLocationImages } from './listAllLocationImages';
 import { deleteLocationImage } from './deleteLocationImage';
 import { upload } from '../../../lib/upload';
 
@@ -22,12 +23,14 @@ locationRouter.delete('/:id', authorizeRoles([UserRoleEnum.ADMIN]), deleteLocati
 
 
 // images related
+locationRouter.get("/images/all", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listAllLocationImages);
 locationRouter.get("/:id/images", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listLocationImages);
 locationRouter.post(
   "/:id/images",
   authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]),
   upload.array("images", 10), // <- diese Zeile muss vor dem Controller stehen
   uploadLocationImages
-); locationRouter.delete("/images/:imageId", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), deleteLocationImage);
+);
+locationRouter.delete("/images/:imageId", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), deleteLocationImage);
 
 export default locationRouter;

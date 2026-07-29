@@ -35,7 +35,7 @@ app.use(function (req, res, next) {
 
 app.use(cors({
     origin: "*",    //TODO make it environment variable
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true, // Needed if you are using cookies/sessions
     allowedHeaders: ['Content-Type', 'Authorization']
 }));

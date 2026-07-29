@@ -15,7 +15,7 @@ export class APIError extends Error {
         this.data = data;
 
         Object.setPrototypeOf(this, new.target.prototype);
-  }
+    }
 
     static errorUserAlreadyExists(): APIError {
         return new APIError("User mit dem Usernamen existiert bereits.", "Verwende einen anderen Usernamen.", 409);
@@ -54,7 +54,7 @@ export class APIError extends Error {
     }
 
     static errorIsDeactivated(data?: unknown): APIError {
-        return new APIError("Account gesperrt.", "Dieser Account ist gesperrt. Prüfe bitte dein Postfach: Ein Entsperrungslink wurde bereits versendet.", 422, data);
+        return new APIError("Account gesperrt.", "Dieser Account ist gesperrt. Wende dich an den Admin.", 422, data);
     }
 
     static errorGone(data?: unknown): APIError {

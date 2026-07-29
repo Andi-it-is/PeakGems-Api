@@ -31,7 +31,12 @@ export const userTokenChecker: UserRequestHandler = async (req: UserRequest, res
       return res.status(401).json({ success: false, message: "User not found" });
     }
 
-    // 3. Attach to request (Type-casted via your interface)
+    // 3. Reject disabled accounts, even if their token is still valid
+    if (user.disabled) {
+      return res.status(403).json({ success: false, message: "Account gesperrt." });
+    }
+
+    // 4. Attach to request (Type-casted via your interface)
     req.user = user;
     req.role = user.role;
 
