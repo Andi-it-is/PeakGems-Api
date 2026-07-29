@@ -5,6 +5,7 @@ import { UserRequest, UserRequestHandler } from "../../../lib/classes/UserReques
 import { Location } from "../../../entity/Location";
 import { LocationImage } from "../../../entity/LocationImage";
 import { Review } from "../../../entity/Review";
+import { Gathering } from "../../../entity/Gathering";
 import { UserRoleEnum } from "../../../lib/enums/UserRoleEnum";
 import * as fs from "fs";
 import * as path from "path";
@@ -19,6 +20,16 @@ export const deleteLocation: UserRequestHandler = async (req: UserRequest, res: 
     const params = await paramSchema.validateAsync(req.params)
 
     if (req.role === UserRoleEnum.ADMIN) {
+
+      const reviewCount = await AppDataSource.getRepository(Review).countBy({ location: { id: Number(params.id) } });
+      const gatheringCount = await AppDataSource.getRepository(Gathering).countBy({ location: { id: Number(params.id) } });
+
+      if (reviewCount > 0 || gatheringCount > 0) {
+        return res.status(409).json({
+          success: false,
+          message: "Location kann nicht gelöscht werden, solange noch Reviews oder Gatherings darauf verweisen.",
+        })
+      }
 
       const imageRepo = AppDataSource.getRepository(LocationImage);
       const images = await imageRepo.findBy({ locationId: Number(params.id) });

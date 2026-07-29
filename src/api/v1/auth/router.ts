@@ -3,10 +3,11 @@ import { Router, Request, Response } from 'express';
 import { registerUser } from './register';
 import { login } from './login';
 import { userTokenChecker } from '../../../lib/middleware/tokenChecker';
+import { authLimiter } from '../../../lib/middleware/rateLimiters';
 
 const authRouter = Router();
 
-authRouter.post('/login', login)
-authRouter.post('/register', registerUser)
+authRouter.post('/login', authLimiter, login)
+authRouter.post('/register', authLimiter, registerUser)
 
 export default authRouter;

@@ -27,9 +27,17 @@ if (envError) {
 import express from "express";
 const app = express();
 
+// Läuft bei netcup hinter Apache/Nginx als Reverse-Proxy - genau ein Hop wird vertraut, damit
+// req.ip / X-Forwarded-For die echte Client-IP liefern (relevant fürs Rate-Limiting unten).
+app.set('trust proxy', 1);
+
 // helmet
 import helmet from "helmet";
 app.use(helmet());
+
+// rate limiting - allgemeines Limit für alle Routen, striktere Limits siehe auth/router.ts
+import { generalLimiter } from "./lib/middleware/rateLimiters";
+app.use(generalLimiter);
 
 
 // setup logger
