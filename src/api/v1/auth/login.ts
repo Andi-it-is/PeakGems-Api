@@ -1,7 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
 import { AppDataSource } from "../../../AppDataSource";
 import { User } from "../../../entity/User";
-import * as bcrypt from "bcrypt";
 import * as Joi from "joi";
 import { APIError } from "../../../lib/classes/APIError";
 import { compare, hash } from "../../../lib/helpers/passwords";
