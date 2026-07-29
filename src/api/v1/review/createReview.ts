@@ -4,6 +4,7 @@ import * as Joi from "joi";
 import { UserRequest, UserRequestHandler } from "../../../lib/classes/UserRequestHandler";
 import { Location } from "../../../entity/Location";
 import { Review } from "../../../entity/Review";
+import { APIError } from "../../../lib/classes/APIError";
 
 
 const bodySchema = Joi.object({
@@ -18,6 +19,10 @@ export const createReview: UserRequestHandler = async (req: UserRequest, res: Re
 
   try {
     const body = await bodySchema.validateAsync(req.body)
+
+    if (body.rating < 0 || body.rating > 10) {
+      throw APIError.errorInvalidRating();
+    }
 
     const review = new Review()
     review.rating = body.rating
@@ -46,6 +51,13 @@ export const createReview: UserRequestHandler = async (req: UserRequest, res: Re
       return res.status(400).json({
         status: "Validation Error",
         errors: error.details.map((detail: any) => detail.message)
+      });
+    } else if (error instanceof APIError) {
+
+      return res.status(error.status).json({
+        title: error.title,
+        message: error.message,
+        data: error.data
       });
     } else {
 

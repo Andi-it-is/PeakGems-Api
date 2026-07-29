@@ -5,6 +5,7 @@ import { UserRequest, UserRequestHandler } from "../../../lib/classes/UserReques
 import { Location } from "../../../entity/Location";
 import { Review } from "../../../entity/Review";
 import { UserRoleEnum } from "../../../lib/enums/UserRoleEnum";
+import { APIError } from "../../../lib/classes/APIError";
 
 const paramSchema = Joi.object({
   id: Joi.required()
@@ -24,6 +25,10 @@ export const updateReview: UserRequestHandler = async (req: UserRequest, res: Re
   try {
     const body = await bodySchema.validateAsync(req.body)
     const params = await paramSchema.validateAsync(req.params)
+
+    if (body.rating < 0 || body.rating > 10) {
+      throw APIError.errorInvalidRating();
+    }
 
     const review = await AppDataSource
       .getRepository(Review)
@@ -62,6 +67,13 @@ export const updateReview: UserRequestHandler = async (req: UserRequest, res: Re
       return res.status(400).json({
         status: "Validation Error",
         errors: error.details.map((detail: any) => detail.message)
+      });
+    } else if (error instanceof APIError) {
+
+      return res.status(error.status).json({
+        title: error.title,
+        message: error.message,
+        data: error.data
       });
     } else {
 

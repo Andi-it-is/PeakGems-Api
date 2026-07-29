@@ -64,4 +64,8 @@ export class APIError extends Error {
     static errorTooManyFailedLoginTries(data?: unknown): APIError {
         return new APIError("Zu viele fehlgeschlagene Anmeldeversuche.", "Dein Konto wurde gesperrt!.", 429, data);
     }
+
+    static errorInvalidRating(data?: unknown): APIError {
+        return new APIError("Ungültige Bewertung.", "Die Bewertung muss zwischen 0 und 10 liegen.", 422, data);
+    }
 }
