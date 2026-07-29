@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { createLocation } from './createLocation';
 import { listAllLocations } from './listAllLocations';
 import { listAllLocationsOverview } from './listAllLocationsOverview';
+import { listAllLocationsWithReviews } from './listAllLocationsWithReviews';
 import { authorizeRoles } from '../../../lib/middleware/authorizeRoles';
 import { UserRoleEnum } from '../../../lib/enums/UserRoleEnum';
 import { updateLocation } from './updateLocation';
@@ -17,6 +18,7 @@ const locationRouter = Router();
 locationRouter.post('/create', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), createLocation)
 locationRouter.get('/all', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listAllLocations)
 locationRouter.get('/overview', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listAllLocationsOverview)
+locationRouter.get('/all/with-reviews', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listAllLocationsWithReviews)
 
 locationRouter.put('/:id', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), updateLocation)
 locationRouter.delete('/:id', authorizeRoles([UserRoleEnum.ADMIN]), deleteLocation)
