@@ -44,7 +44,7 @@ export const uploadLocationImages: UserRequestHandler = async (req: UserRequest,
     const images = files.map((file) =>
       imageRepo.create({
         filename: file.filename,
-        url: `/uploads/locations/${file.filename}`, // TODO: an euer Storage-Setup anpassen
+        url: `/api/v1/location/images/${file.filename}`,
         altText: body.altText,
         locationId: location.id,
       }),

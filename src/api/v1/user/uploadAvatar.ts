@@ -23,7 +23,7 @@ export const uploadAvatar: UserRequestHandler = async (req: UserRequest, res: Re
       });
     }
 
-    req.user.avatar = `/uploads/avatars/${file.filename}`;
+    req.user.avatar = `/api/v1/user/avatar/${file.filename}`;
     await AppDataSource.getRepository(User).save(req.user);
 
     return res.status(200).json({

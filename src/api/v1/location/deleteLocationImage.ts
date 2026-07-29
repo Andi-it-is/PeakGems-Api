@@ -3,7 +3,6 @@ import { AppDataSource } from "../../../AppDataSource";
 import * as Joi from "joi";
 import { UserRequest, UserRequestHandler } from "../../../lib/classes/UserRequestHandler";
 import { LocationImage } from "../../../entity/LocationImage";
-import { UserRoleEnum } from "../../../lib/enums/UserRoleEnum";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -14,13 +13,6 @@ const paramSchema = Joi.object({
 export const deleteLocationImage: UserRequestHandler = async (req: UserRequest, res: Response) => {
   try {
     const params = await paramSchema.validateAsync(req.params);
-
-    if (req.role !== UserRoleEnum.ADMIN) {
-      return res.status(403).json({
-        success: false,
-        message: "Deleting Images is forbidden for users.",
-      });
-    }
 
     const imageRepo = AppDataSource.getRepository(LocationImage);
     const image = await imageRepo.findOneBy({ id: Number(params.imageId) });

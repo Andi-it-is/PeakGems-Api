@@ -8,9 +8,10 @@ import { getUserInfo } from './getUserInfo';
 import { resetUserPassword } from './resetPassword';
 import { uploadAvatar } from './uploadAvatar';
 import { removeAvatar } from './removeAvatar';
-import { avatarUpload } from '../../../lib/upload';
+import { avatarUpload, AVATAR_UPLOAD_DIR } from '../../../lib/upload';
 import { updateUser } from './updateUser';
 import { setNewPasswordAfterReset } from './setNewPasswordAfterReset';
+import { serveUploadedFile } from '../../../lib/middleware/serveUploadedFile';
 
 const userRouter = Router();
 
@@ -29,6 +30,7 @@ userRouter.post(
   uploadAvatar
 )
 userRouter.delete('/avatar', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), removeAvatar)
+userRouter.get('/avatar/:filename', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), serveUploadedFile(AVATAR_UPLOAD_DIR))
 
 userRouter.patch('/:id', authorizeRoles([UserRoleEnum.ADMIN]), updateUser)
 

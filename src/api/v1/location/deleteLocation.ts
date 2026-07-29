@@ -3,8 +3,11 @@ import { AppDataSource } from "../../../AppDataSource";
 import * as Joi from "joi";
 import { UserRequest, UserRequestHandler } from "../../../lib/classes/UserRequestHandler";
 import { Location } from "../../../entity/Location";
+import { LocationImage } from "../../../entity/LocationImage";
 import { Review } from "../../../entity/Review";
 import { UserRoleEnum } from "../../../lib/enums/UserRoleEnum";
+import * as fs from "fs";
+import * as path from "path";
 
 const paramSchema = Joi.object({
   id: Joi.required()
@@ -17,6 +20,9 @@ export const deleteLocation: UserRequestHandler = async (req: UserRequest, res: 
 
     if (req.role === UserRoleEnum.ADMIN) {
 
+      const imageRepo = AppDataSource.getRepository(LocationImage);
+      const images = await imageRepo.findBy({ locationId: Number(params.id) });
+
       const result = await AppDataSource
         .getRepository(Location)
         .delete(Number(params.id))
@@ -26,6 +32,14 @@ export const deleteLocation: UserRequestHandler = async (req: UserRequest, res: 
           success: false,
           message: "No Location under the given id was found.",
         })
+      }
+
+      // Bilddateien der Location von der Platte entfernen (DB-Zeilen sind bereits per ON DELETE CASCADE weg)
+      for (const image of images) {
+        const filePath = path.join(__dirname, "../../../../uploads/locations", image.filename);
+        fs.unlink(filePath, (err) => {
+          if (err) console.error("Konnte Bilddatei nicht löschen:", err);
+        });
       }
 
       return res.status(200).json({

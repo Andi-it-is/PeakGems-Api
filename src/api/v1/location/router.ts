@@ -11,7 +11,8 @@ import { uploadLocationImages } from './uploadLocationImages';
 import { listLocationImages } from './listLocationImages';
 import { listAllLocationImages } from './listAllLocationImages';
 import { deleteLocationImage } from './deleteLocationImage';
-import { upload } from '../../../lib/upload';
+import { upload, LOCATION_UPLOAD_DIR } from '../../../lib/upload';
+import { serveUploadedFile } from '../../../lib/middleware/serveUploadedFile';
 
 const locationRouter = Router();
 
@@ -26,6 +27,7 @@ locationRouter.delete('/:id', authorizeRoles([UserRoleEnum.ADMIN]), deleteLocati
 
 // images related
 locationRouter.get("/images/all", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listAllLocationImages);
+locationRouter.get("/images/:filename", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), serveUploadedFile(LOCATION_UPLOAD_DIR));
 locationRouter.get("/:id/images", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listLocationImages);
 locationRouter.post(
   "/:id/images",

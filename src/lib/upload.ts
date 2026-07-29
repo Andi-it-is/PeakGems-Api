@@ -3,7 +3,8 @@ import path from "path";
 import fs from "fs";
 import { Request } from "express";
 
-const uploadDir = path.join(__dirname, "../../uploads/locations"); // TODO: Pfad an Projektstruktur anpassen
+export const LOCATION_UPLOAD_DIR = path.join(__dirname, "../../uploads/locations"); // TODO: Pfad an Projektstruktur anpassen
+const uploadDir = LOCATION_UPLOAD_DIR;
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -34,7 +35,8 @@ export const upload = multer({
   },
 });
 
-const avatarUploadDir = path.join(__dirname, "../../uploads/avatars"); // TODO: Pfad an Projektstruktur anpassen
+export const AVATAR_UPLOAD_DIR = path.join(__dirname, "../../uploads/avatars"); // TODO: Pfad an Projektstruktur anpassen
+const avatarUploadDir = AVATAR_UPLOAD_DIR;
 
 if (!fs.existsSync(avatarUploadDir)) {
   fs.mkdirSync(avatarUploadDir, { recursive: true });

@@ -1,5 +1,28 @@
 require("reflect-metadata"); // Must remain require at the very top
 
+// .env muss vor jedem process.env-Zugriff geladen sein (z.B. bevor CORS/JWT-Config unten gelesen wird)
+import * as dotenv from "dotenv";
+dotenv.config();
+
+// Fail fast: fehlende/leere Pflicht-Umgebungsvariablen sollen den Start verhindern,
+// statt später mit z.B. offenem CORS (*) oder undefined JWT-Secret unbemerkt zu laufen.
+import * as Joi from "joi";
+const envSchema = Joi.object({
+    DB_TYPE: Joi.string().valid('postgres', 'mysql').required(),
+    DB_HOST: Joi.string().required(),
+    DB_PORT: Joi.string().required(),
+    DB_USERNAME: Joi.string().required(),
+    DB_PASSWORD: Joi.string().required(),
+    DB_DATABASE: Joi.string().required(),
+    JWT_ACCESSTOKEN_SECRET: Joi.string().min(32).required(),
+    CORS_ORIGIN: Joi.string().required(),
+}).unknown(true);
+
+const { error: envError } = envSchema.validate(process.env);
+if (envError) {
+    throw new Error(`Fehlende/ungültige Umgebungsvariablen: ${envError.message}`);
+}
+
 // express
 import express from "express";
 const app = express();
@@ -24,17 +47,10 @@ app.use(morgan(loggingFormat, {
 // import bodyparser from "body-parser";
 // app.use(bodyparser.json());
 
-// TODO: cors
 const cors = require('cors')
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-
 
 app.use(cors({
-    origin: "*",    //TODO make it environment variable
+    origin: process.env.CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true, // Needed if you are using cookies/sessions
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -42,21 +58,11 @@ app.use(cors({
 app.use(express.json())
 
 // routes
+// Avatare/Location-Bilder werden nicht mehr öffentlich per express.static ausgeliefert, sondern
+// über authentifizierte Routen direkt im user-/location-Router: GET /api/v1/user/avatar/:filename,
+// GET /api/v1/location/images/:filename.
 import versionRouter from "./api/versionRouter";
 app.use(versionRouter);
-
-import path from "path";
-
-app.use(helmet());
-
-app.use(
-    "/uploads",
-    (req, res, next) => {
-        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-        next();
-    },
-    express.static(path.join(__dirname, "../uploads")),
-);
 
 import { AppDataSource } from "./AppDataSource";
 const PORT: string = process.env.PORT || "3000";
