@@ -17,9 +17,9 @@ export class Migration1774449767480 implements MigrationInterface {
         await queryRunner.dropColumn("review", "visitedDate");
         await queryRunner.addColumn("review", new TableColumn({
             name: "visitedDate",
-            type: "date",
+            type: "varchar",
             isNullable: false,
-            default: "CURRENT_DATE",
+            default: "'01.01.1970'",
         }));
     }
 
