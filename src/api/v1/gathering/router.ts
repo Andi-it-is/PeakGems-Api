@@ -6,6 +6,7 @@ import { listAllGatherings } from './listAllGatherings';
 import { updateGathering } from './updateGathering';
 import { deleteGathering } from './deleteGathering';
 import { setAttendance } from './setAttendance';
+import { deleteAttendance } from './deleteAttendance';
 
 const gatheringRouter = Router();
 
@@ -15,5 +16,6 @@ gatheringRouter.put('/:id', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMI
 gatheringRouter.delete('/:id', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), deleteGathering)
 
 gatheringRouter.post('/:id/attendance', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), setAttendance)
+gatheringRouter.delete('/:id/attendance', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), deleteAttendance)
 
 export default gatheringRouter;

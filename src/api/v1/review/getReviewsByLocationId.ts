@@ -33,6 +33,7 @@ export const getReviewsByLocationId: RequestHandler = async (req: Request, res: 
           address: true,
           status: true,
           type: true,
+          description: true,
 
           // 2. Keep all Review fields
           reviews: {
