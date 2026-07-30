@@ -11,6 +11,7 @@ import { uploadLocationImages } from './uploadLocationImages';
 import { listLocationImages } from './listLocationImages';
 import { listAllLocationImages } from './listAllLocationImages';
 import { deleteLocationImage } from './deleteLocationImage';
+import { updateLocationImage } from './updateLocationImage';
 import { upload, LOCATION_UPLOAD_DIR } from '../../../lib/upload';
 import { serveUploadedFile } from '../../../lib/middleware/serveUploadedFile';
 
@@ -35,6 +36,7 @@ locationRouter.post(
   upload.array("images", 10), // <- diese Zeile muss vor dem Controller stehen
   uploadLocationImages
 );
+locationRouter.patch("/images/:imageId", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), updateLocationImage);
 locationRouter.delete("/images/:imageId", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), deleteLocationImage);
 
 export default locationRouter;

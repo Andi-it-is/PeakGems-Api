@@ -13,6 +13,7 @@ const paramSchema = Joi.object({
 const bodySchema = Joi.object({
   name: Joi.string().required(),
   address: Joi.string().required(),
+  description: Joi.string().allow('', null).optional(),
   status: Joi.string().required(),
   type: Joi.string().required()
 }).unknown(true)
@@ -40,7 +41,8 @@ export const updateLocation: UserRequestHandler = async (req: UserRequest, res: 
 
     location.name = body.name
     location.address = body.address
-    
+    location.description = body.description
+
     location.status = body.status
     location.type = body.type
   

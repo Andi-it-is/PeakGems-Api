@@ -5,6 +5,7 @@ import authRouter from "./auth/router";
 import userRouter from "./user/router";
 import locationRouter from "./location/router";
 import reviewRouter from "./review/router";
+import gatheringRouter from "./gathering/router";
 
 const router = Router()
 /**
@@ -27,6 +28,7 @@ router.use("/auth", authRouter)
 router.use("/location", userTokenChecker, locationRouter)
 router.use("/review", userTokenChecker, reviewRouter)
 router.use("/user", userTokenChecker, userRouter)
+router.use("/gathering", userTokenChecker, gatheringRouter)
 
 // saved routes
 

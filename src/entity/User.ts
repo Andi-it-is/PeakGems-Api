@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, Up
 import { RefreshToken } from "./RefreshToken"
 import { UserRoleEnum } from "../lib/enums/UserRoleEnum"
 import { Review } from "./Review"
+import { GatheringAttendee } from "./GatheringAttendee"
 
 @Entity()
 export class User {
@@ -57,6 +58,9 @@ export class User {
     
     @OneToMany(() => Review, review => review.user)
         reviews: Review[]
+
+    @OneToMany(() => GatheringAttendee, attendee => attendee.user)
+        gatheringAttendances: GatheringAttendee[]
 
 
 }

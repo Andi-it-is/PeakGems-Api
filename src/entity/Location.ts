@@ -23,6 +23,12 @@ export class Location {
     address: string
 
     @Column({
+        type: "text",
+        nullable: true,
+    })
+    description: string
+
+    @Column({
         nullable: false,
     })
     status: LocationStatusEnum

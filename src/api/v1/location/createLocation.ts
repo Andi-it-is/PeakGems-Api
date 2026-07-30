@@ -8,6 +8,7 @@ import { Location } from "../../../entity/Location";
 const bodySchema = Joi.object({
   name: Joi.string().required(),
   address: Joi.string().required(),
+  description: Joi.string().allow('', null).optional(),
   status: Joi.string().required(),
   type: Joi.string().required()
 })
@@ -16,10 +17,11 @@ export const createLocation: RequestHandler  = async (req: Request, res: Respons
 
   try {
     const body = await bodySchema.validateAsync(req.body)
-    
+
     const location = new Location()
     location.name = body.name
     location.address = body.address
+    location.description = body.description
     location.status = body.status
     location.type = body.type
 
