@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey, TableUnique } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey, TableIndex } from "typeorm";
 
 export class Migration1785283400000 implements MigrationInterface {
     name = 'Migration1785283400000'
@@ -35,10 +35,26 @@ export class Migration1785283400000 implements MigrationInterface {
         await queryRunner.dropColumn("gathering", "date");
         await queryRunner.dropColumn("gathering", "time");
 
+        // MySQL (anders als Postgres) verweigert changeColumn auf einer Spalte, die Teil einer
+        // Foreign Key Constraint ist -> FK vorher droppen, Spalte anpassen, FK neu anlegen.
+        const gatheringTableBefore = await queryRunner.getTable("gathering");
+        const locationFk = gatheringTableBefore.foreignKeys.find(fk => fk.columnNames.indexOf("locationId") !== -1);
+        if (locationFk) {
+            await queryRunner.dropForeignKey("gathering", locationFk);
+        }
+
         await queryRunner.changeColumn("gathering", "locationId", new TableColumn({
             name: "locationId",
             type: "int",
             isNullable: false,
+        }));
+
+        await queryRunner.createForeignKey("gathering", new TableForeignKey({
+            columnNames: ["locationId"],
+            referencedTableName: "location",
+            referencedColumnNames: ["id"],
+            onDelete: "NO ACTION",
+            onUpdate: "NO ACTION",
         }));
 
         // Neue Tabelle: gathering_attendee (Zu-/Absagen pro Nutzer und Treffen)
@@ -70,18 +86,34 @@ export class Migration1785283400000 implements MigrationInterface {
             onUpdate: "NO ACTION",
         }));
 
-        await queryRunner.createUniqueConstraint("gathering_attendee", new TableUnique({
+        await queryRunner.createIndex("gathering_attendee", new TableIndex({
+            name: "UQ_gathering_attendee_gathering_user",
             columnNames: ["gatheringId", "userId"],
+            isUnique: true,
         }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable("gathering_attendee");
 
+        const gatheringTableBefore = await queryRunner.getTable("gathering");
+        const locationFk = gatheringTableBefore.foreignKeys.find(fk => fk.columnNames.indexOf("locationId") !== -1);
+        if (locationFk) {
+            await queryRunner.dropForeignKey("gathering", locationFk);
+        }
+
         await queryRunner.changeColumn("gathering", "locationId", new TableColumn({
             name: "locationId",
             type: "int",
             isNullable: true,
+        }));
+
+        await queryRunner.createForeignKey("gathering", new TableForeignKey({
+            columnNames: ["locationId"],
+            referencedTableName: "location",
+            referencedColumnNames: ["id"],
+            onDelete: "NO ACTION",
+            onUpdate: "NO ACTION",
         }));
 
         await queryRunner.addColumn("gathering", new TableColumn({
