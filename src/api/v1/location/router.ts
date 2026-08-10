@@ -33,7 +33,7 @@ locationRouter.get("/:id/images", authorizeRoles([UserRoleEnum.USER, UserRoleEnu
 locationRouter.post(
   "/:id/images",
   authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]),
-  upload.array("images", 10), // <- diese Zeile muss vor dem Controller stehen
+  upload.array("images", 25), // <- diese Zeile muss vor dem Controller stehen
   uploadLocationImages
 );
 locationRouter.patch("/images/:imageId", authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), updateLocationImage);
