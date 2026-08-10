@@ -39,7 +39,7 @@ export async function _generateRefreshToken(id: number): Promise<string> {
 
     const authenticable = await AppDataSource
         .getRepository(User)
-        .findOneBy({id: id});
+        .findOneBy({ id: id });
 
     if (authenticable == null) {
         throw new APIError(
@@ -64,7 +64,7 @@ export async function generateAccessToken(id: number): Promise<string> {
 
     const authenticable = await AppDataSource
         .getRepository(User)
-        .findOneBy({id});
+        .findOneBy({ id });
 
     if (authenticable == null) {
         throw new APIError(
@@ -93,7 +93,7 @@ export async function _deactivateOld(id: number): Promise<void> {
 
     const authenticable = await AppDataSource
         .getRepository(User)
-        .findOneBy({id});
+        .findOneBy({ id });
 
     if (!authenticable) {
         return;

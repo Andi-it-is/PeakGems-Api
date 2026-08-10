@@ -74,14 +74,10 @@ app.use(versionRouter);
 
 import { AppDataSource } from "./AppDataSource";
 const PORT: string = process.env.PORT || "3000";
-app.listen(PORT, async () => {
 
-    console.log('Timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
+console.log('Timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-    await connectToDb();
-    console.log(`Backend started. Listening on port: ${PORT}`);
-});
-
+const delay = (n: number) => new Promise(r => setTimeout(r, n * 1000));
 
 // Use the DataSource to initilize connection and run the Migrations
 const connectToDb = async (): Promise<any> => {
@@ -109,4 +105,11 @@ const connectToDb = async (): Promise<any> => {
     return;
 };
 
-const delay = (n) => new Promise(r => setTimeout(r, n * 1000));
+// DB-Verbindung + Migrationen müssen abgeschlossen sein, bevor der Server Requests annimmt -
+// sonst können Requests (z.B. nach einem Passenger-Kaltstart) auf eine DataSource treffen,
+// deren Entity-Metadaten noch nicht geladen sind ("No metadata for ... was found").
+connectToDb().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Backend started. Listening on port: ${PORT}`);
+    });
+});
