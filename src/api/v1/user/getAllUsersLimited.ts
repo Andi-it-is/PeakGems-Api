@@ -9,13 +9,25 @@ export const getAllUsersLimited: UserRequestHandler = async (req: UserRequest, r
     const users = await AppDataSource
       .getRepository(User)
       .find({
+        relations: {
+          badges: true
+        },
         select: {
           id: true,
           username: true,
-          avatar: true
+          avatar: true,
+          badges: {
+            id: true,
+            title: true,
+            color: true,
+            textColor: true
+          }
         },
         order: {
-          username: 'ASC'
+          username: 'ASC',
+          badges: {
+            title: 'ASC'
+          }
         }
       })
 

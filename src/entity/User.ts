@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from "typeorm"
+import { CustomBadge } from "./CustomBadge"
 import { RefreshToken } from "./RefreshToken"
 import { UserRoleEnum } from "../lib/enums/UserRoleEnum"
 import { Review } from "./Review"
@@ -61,6 +62,15 @@ export class User {
 
     @OneToMany(() => GatheringAttendee, attendee => attendee.user)
         gatheringAttendances: GatheringAttendee[]
+
+    // Badges, die andere User diesem User gegeben haben (jedes Badge höchstens einmal pro User)
+    @ManyToMany(() => CustomBadge, badge => badge.users)
+    @JoinTable({
+        name: "user_custom_badge",
+        joinColumn: { name: "userId", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "customBadgeId", referencedColumnName: "id" },
+    })
+        badges: CustomBadge[]
 
 
 }

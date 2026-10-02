@@ -5,6 +5,7 @@ import { UserRequest, UserRequestHandler } from "../../../lib/classes/UserReques
 import { Location } from "../../../entity/Location";
 import { Review } from "../../../entity/Review";
 import { UserRoleEnum } from "../../../lib/enums/UserRoleEnum";
+import { pointSchema, withLocationPoint } from "../../../lib/helpers/location";
 
 const paramSchema = Joi.object({
   id: Joi.required()
@@ -15,7 +16,9 @@ const bodySchema = Joi.object({
   address: Joi.string().required(),
   description: Joi.string().allow('', null).optional(),
   status: Joi.string().required(),
-  type: Joi.string().required()
+  type: Joi.string().required(),
+  city: Joi.string().trim().max(255).required(),
+  location: pointSchema.allow(null).optional(),
 }).unknown(true)
 
 export const updateLocation: UserRequestHandler = async (req: UserRequest, res: Response, next) => {
@@ -45,14 +48,21 @@ export const updateLocation: UserRequestHandler = async (req: UserRequest, res: 
 
     location.status = body.status
     location.type = body.type
-  
+
+    location.city = body.city
+
+    // nicht mitgeschickt = Koordinaten bleiben, null = Koordinaten entfernen
+    if (body.location !== undefined) {
+      location.longitude = body.location ? body.location.coordinates[0] : null
+      location.latitude = body.location ? body.location.coordinates[1] : null
+    }
 
     await AppDataSource.manager.save(location)
 
     return res.status(200).json({
       success: true,
       message: "Location successfully updated",
-      data: location
+      data: withLocationPoint(location)
     })
 
   } catch (error) {

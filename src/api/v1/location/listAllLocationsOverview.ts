@@ -4,6 +4,7 @@ import * as Joi from "joi";
 import { UserRequestHandler } from "../../../lib/classes/UserRequestHandler";
 import { Location } from "../../../entity/Location";
 import { Review } from "../../../entity/Review";
+import { withLocationPoint } from "../../../lib/helpers/location";
 
 export const listAllLocationsOverview: RequestHandler  = async (req: Request, res: Response, next) => {
 
@@ -44,7 +45,7 @@ export const listAllLocationsOverview: RequestHandler  = async (req: Request, re
 
     return res.status(200).json({
       success: true,
-      data: locationsWithAvgRating,
+      data: locationsWithAvgRating.map(withLocationPoint),
     })
 
   } catch (error) {

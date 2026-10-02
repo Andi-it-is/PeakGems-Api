@@ -6,6 +6,7 @@ import userRouter from "./user/router";
 import locationRouter from "./location/router";
 import reviewRouter from "./review/router";
 import gatheringRouter from "./gathering/router";
+import badgeRouter from "./badge/router";
 
 const router = Router()
 /**
@@ -29,6 +30,7 @@ router.use("/location", userTokenChecker, locationRouter)
 router.use("/review", userTokenChecker, reviewRouter)
 router.use("/user", userTokenChecker, userRouter)
 router.use("/gathering", userTokenChecker, gatheringRouter)
+router.use("/badge", userTokenChecker, badgeRouter)
 
 // saved routes
 

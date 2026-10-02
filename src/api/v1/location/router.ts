@@ -14,6 +14,7 @@ import { deleteLocationImage } from './deleteLocationImage';
 import { updateLocationImage } from './updateLocationImage';
 import { upload, LOCATION_UPLOAD_DIR } from '../../../lib/upload';
 import { serveUploadedFile } from '../../../lib/middleware/serveUploadedFile';
+import { listLocationsForMap } from './listLocationsForMap';
 
 const locationRouter = Router();
 
@@ -21,6 +22,7 @@ locationRouter.post('/create', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.A
 locationRouter.get('/all', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listAllLocations)
 locationRouter.get('/overview', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listAllLocationsOverview)
 locationRouter.get('/all/with-reviews', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listAllLocationsWithReviews)
+locationRouter.get('/map', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), listLocationsForMap)
 
 locationRouter.put('/:id', authorizeRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN]), updateLocation)
 locationRouter.delete('/:id', authorizeRoles([UserRoleEnum.ADMIN]), deleteLocation)

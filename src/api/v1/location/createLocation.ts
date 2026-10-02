@@ -3,6 +3,7 @@ import { AppDataSource } from "../../../AppDataSource";
 import * as Joi from "joi";
 import { UserRequestHandler } from "../../../lib/classes/UserRequestHandler";
 import { Location } from "../../../entity/Location";
+import { pointSchema } from "../../../lib/helpers/location";
 
 
 const bodySchema = Joi.object({
@@ -10,7 +11,9 @@ const bodySchema = Joi.object({
   address: Joi.string().required(),
   description: Joi.string().allow('', null).optional(),
   status: Joi.string().required(),
-  type: Joi.string().required()
+  type: Joi.string().required(),
+  city: Joi.string().trim().max(255).required(),
+  location: pointSchema.allow(null).optional(),
 })
 
 export const createLocation: RequestHandler  = async (req: Request, res: Response, next) => {
@@ -24,6 +27,9 @@ export const createLocation: RequestHandler  = async (req: Request, res: Respons
     location.description = body.description
     location.status = body.status
     location.type = body.type
+    location.city = body.city
+    location.longitude = body.location ? body.location.coordinates[0] : null
+    location.latitude = body.location ? body.location.coordinates[1] : null
 
     await AppDataSource.manager.save(location)
 

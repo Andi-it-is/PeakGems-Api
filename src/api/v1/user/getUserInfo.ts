@@ -11,6 +11,14 @@ export const getUserInfo: UserRequestHandler = async (req: UserRequest, res, nex
       .findOne({
         where: {
           id: req.user.id
+        },
+        relations: {
+          badges: true
+        },
+        order: {
+          badges: {
+            title: 'ASC'
+          }
         }
       })
 
@@ -20,7 +28,8 @@ export const getUserInfo: UserRequestHandler = async (req: UserRequest, res, nex
       role: user.role,
       userId: user.id,
       avatar: user.avatar,
-      mustSetNewPassword: user.mustSetNewPassword
+      mustSetNewPassword: user.mustSetNewPassword,
+      badges: user.badges.map(badge => ({ id: badge.id, title: badge.title, color: badge.color, textColor: badge.textColor }))
     })
 
   } catch (error) {

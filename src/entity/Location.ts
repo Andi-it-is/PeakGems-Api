@@ -38,6 +38,26 @@ export class Location {
     })
     type: LocationTypeEnum
 
+    // Default nur für Bestandsdaten aus der Migration - die API verlangt city immer explizit
+    @Column({
+        nullable: false,
+        default: "DefaultStadt",
+    })
+    city: string
+
+    // "double precision" statt "float": float wäre in MySQL nur einfache Genauigkeit
+    @Column({
+        type: "double precision",
+        nullable: true,
+    })
+    latitude: number | null
+
+    @Column({
+        type: "double precision",
+        nullable: true,
+    })
+    longitude: number | null
+
     @CreateDateColumn()
     createdAt: Date
 
